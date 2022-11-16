@@ -21,7 +21,7 @@ Functionally, the abbreviation format for the end user remains the same as it wa
 
 `p`: ping pong play mode (plays to end, reverse plays back to start, repeats)
 
-`o`: one or more AnimObject
+`o`: one or more AnimObjects, define at end of line separated by spaces between each object. Must match plugin defined animobjects that are set to unload on `AnimObjectUnequip`.
 
 
 `Tn`: already default on in all animations, no need to include this explicitly in the abbreviation
