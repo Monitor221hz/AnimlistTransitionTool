@@ -57,4 +57,4 @@ The following variables are available for ported animlist behaviour, and their f
 Use event `OST_ExitAnim` to exit an anim instantly.
 
 ## Planned
-Option for gender specific animations, transition time customization.
+Option for gender specific animations, transition time customization. Addition of more options to make it as capable as fnis.
