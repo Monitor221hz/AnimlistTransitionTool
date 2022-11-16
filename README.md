@@ -49,9 +49,9 @@ The following variables are available for ported animlist behaviour, and their f
 
 `<modPrefix>_AnimStartTime`
 
-`<modPrefix>_AnimationSpeed`
+`<modPrefix>_AnimationSpeed`: Speed multiplier. At 0.0 the animation is paused.
 
-
+All vars are at 0.0 on graph initialization (usually on race change/playthrough start), including `_AnimationSpeed`
 
 ### Exit events
 Use event `OST_ExitAnim` to exit an anim instantly.
