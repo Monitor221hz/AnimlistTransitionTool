@@ -1,9 +1,17 @@
 # Animlist Transition Tool
-FNIS Animlist to Nemesis patch tool.
+FNIS Animlist to Nemesis patch tool, for Skyrim Special Edition.
 
 Originally made for Ostim NG, allows users to port FNIS behaviour to Nemesis patches.
 
-## Quickstart Guide
+## Requirements:
+
+.NET Desktop Runtime 6.0.11+
+
+## Quickstart:
+
+Run > load animlist.txt file > fill required fields > set output folder > launch
+
+## Documentation:
 
 Functionally, the abbreviation format for the end user remains the same as it was in FNIS, albeit with less options.
 
