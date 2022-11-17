@@ -161,7 +161,18 @@ public partial class AnimlistTransitionTool : Form
                 List<string> options = args[1].Substring(1).Split(',').ToList();
                 string eventname = args[2];
                 string file = "Animations\\" + modName + "\\" + args[3].Replace("\n", string.Empty).Replace("\r", string.Empty).Replace("\r\n", string.Empty);
-                string sex = "b";
+                string sex;
+                if (options.Contains("f"))
+                {
+                    sex = "f";
+                } else if (options.Contains("m"))
+                {
+                    sex = "m";
+                } else
+                {
+                    sex = "b";
+                }
+                
                 string mode = "MODE_LOOPING";
                 if (options.Contains("a"))
                 {
@@ -187,20 +198,23 @@ public partial class AnimlistTransitionTool : Form
     }
     public void ExportAnimlistToPatch()
     {
+        
         CultureInfo Defculture = CultureInfo.CurrentCulture;
         CultureInfo.CurrentCulture = new CultureInfo("en-US");
+
         cropStartVar = modPrefix.ToUpper() + "_CropAnimStart";
         cropEndVar = modPrefix.ToUpper() + "_CropAnimEnd";
         startTimeVar = modPrefix.ToUpper() + "_AnimStartTime";
         playbackSpeedVar = modPrefix.ToUpper() + "_AnimationSpeed";
         exitEvent = "OST_ExitAnim";
         //exitEvent = modPrefix.ToUpper() + "_ExitAnim";
-        LaunchButton.Enabled = false;
+        
         FileProgressBar.Visible = true;
         FileProgressBar.Minimum = 0;
         FileProgressBar.Maximum = AnimDefList.Count * 2+5;
         FileProgressBar.Value = 1;
         FileProgressBar.Step = 1;
+        FileProgressBar.PerformStep();
         PrepOutput();
         string s_0106 = ReadResource("#0106.txt");
         string s_0107 = ReadResource("#0107.txt");
@@ -209,6 +223,7 @@ public partial class AnimlistTransitionTool : Form
         string s_f0029 = ReadResource("f#0029.txt");
         string s_m0029 = ReadResource("m#0029.txt");
         string s_2378 = ReadResource("#2378.txt");
+        string s_2517 = ReadResource("#2517.txt");
         string s_hkbStateMachineStateInfo = ReadResource("hkbStateMachineStateInfo.txt");
         string s_hkbStateMachine = ReadResource("hkbStateMachine.txt");
         string s_hkbClipGenerator = ReadResource("hkbClipGenerator.txt");
@@ -216,6 +231,9 @@ public partial class AnimlistTransitionTool : Form
         string s_hkTransitionInfo = ReadResource("hkTransitionInfo.txt");
         string s_hkbTransitionInfoArray = ReadResource("hkbTransitionInfoArray.txt");
         string s_hkbBlendingTransitionEffect = ReadResource("hkbBlendingTransitionEffect.txt");
+        string s_hkbEvaluateExpressionModifier = ReadResource("hkbEvaluateExpressionModifier.txt");
+        string s_hkbExpressionDataArray = ReadResource("hkbExpressionDataArray.txt");
+
 
         string s_hkbActiveVariableBindingSet = ReadResource("hkbActiveVariableBindingSet.txt");
         string s_hkbStateMachineEventPropertyArray = ReadResource("hkbStateMachineEventPropertyArray.txt");
@@ -235,6 +253,17 @@ public partial class AnimlistTransitionTool : Form
 
         RootState = new hkbObject(modPrefix, 0, s_hkbStateMachineStateInfo);
         StateMachine = new hkbObject(modPrefix, 1, s_hkbStateMachine);
+        hkbObject DefaultExpressionModifier = new hkbObject(modPrefix, 2, s_hkbEvaluateExpressionModifier);
+        hkbObject DefaultExpression = new hkbObject(modPrefix, 3, s_hkbExpressionDataArray);
+        DefaultExpression.Params.Tag = DefaultExpression.GetTag();
+        DefaultExpression.Params.Expression = playbackSpeedVar;
+
+        DefaultExpressionModifier.Params.Tag = DefaultExpressionModifier.GetTag();
+        DefaultExpressionModifier.Params.Name = modName + "_DefaultModifier";
+        DefaultExpressionModifier.Params.ExpressionTag = DefaultExpression.GetTag();
+        ExportPatch(DefaultExpression, masterPath);
+        ExportPatch(DefaultExpressionModifier, masterPath);
+
         hkbObject _0106 = new hkbObject(modPrefix, s_0106);
         hkbObject _0107 = new hkbObject(modPrefix, s_0107);
         hkbObject _0108 = new hkbObject(modPrefix, s_0108);
@@ -242,9 +271,17 @@ public partial class AnimlistTransitionTool : Form
         hkbObject _f0029 = new hkbObject(modPrefix, s_f0029);
         hkbObject _m0029 = new hkbObject(modPrefix, s_m0029);
         hkbObject _2378 = new hkbObject(modPrefix, s_2378);
+        hkbObject _2517 = new hkbObject(modPrefix, s_2517);
+        
+
         _0340.Params.Prefix = modPrefix;
         _0340.Params.Insert = RootState.GetTag();
         ExportPatch(_0340, masterPath, "#0340");
+        
+
+        _2517.Params.Modifier = DefaultExpressionModifier.GetTag();
+        ExportPatch(_2517, masterPath, "#2517");
+
         RootState.Params.Tag = RootState.GetTag();
         RootState.Params.variableBindingSet = null;
         RootState.Params.enterNotifyEvents = null;
@@ -259,14 +296,15 @@ public partial class AnimlistTransitionTool : Form
         List<string> VarNames = new List<string>();
         List<string> FileNames = new List<string>();
         List<string> Flags = new List<string>();
+        List<string> SexExclusions = new List<string>();
         EventNames.Add(String.Format(s_hkcString, exitEvent));
         VarNames.Add(String.Format(s_hkcString, playbackSpeedVar));
         VarNames.Add(String.Format(s_hkcString, cropStartVar));
         VarNames.Add(String.Format(s_hkcString, cropEndVar));
         VarNames.Add(String.Format(s_hkcString, startTimeVar));
         int clipcount = -1;
-        FileProgressBar.PerformStep();
-        int id = 2;
+        
+        int id = 4;
         foreach (AnimDef Def in AnimDefList)
         {
             clipcount++;
@@ -374,6 +412,7 @@ public partial class AnimlistTransitionTool : Form
             ExportPatch(Def.BindingSet, masterPath);
             States.Add(Def.State.GetTag());
             EventNames.Add(String.Format(s_hkcString, Def.EventName));
+            SexExclusions.Add(Def.Sex);
             FileNames.Add(String.Format(s_hkcString, Def.File));
             //Flags.Add
             FileProgressBar.PerformStep();
@@ -461,8 +500,31 @@ public partial class AnimlistTransitionTool : Form
         _f0029.Params.Prefix = modPrefix;
         _m0029.Params.Prefix = modPrefix;
 
-        _f0029.Params.Anims = String.Join("\n", FileNames);
-        _m0029.Params.Anims = String.Join("\n", FileNames);
+        List<string> mArr = new List<string>();
+        List<string> fArr = new List<string>();
+        for (int i = 0; i < SexExclusions.Count; i++)
+        {
+            string s = SexExclusions[i];
+            Debug.WriteLine(s);
+            switch (s)
+            {
+                
+                case ("f"):
+                    fArr.Add(FileNames[i]);
+                    _m0029.Params.AnimCount -= 1;
+                    break;
+                case ("m"):
+                    mArr.Add(FileNames[i]);
+                    _f0029.Params.AnimCount -= 1;
+                    break;
+                default:
+                    mArr.Add(FileNames[i]);
+                    fArr.Add(FileNames[i]);
+                    break;
+            }
+        }
+        _f0029.Params.Anims = String.Join("\n", fArr);
+        _m0029.Params.Anims = String.Join("\n", mArr);
         
         ExportPatch(_f0029, deffemalePath, "#0029");
         ExportPatch(_m0029, defmalePath, "#0029");
@@ -478,8 +540,9 @@ public partial class AnimlistTransitionTool : Form
         ExportPatch(StateMachine, masterPath);
         WritePatchMetadata();
         FileProgressBar.PerformStep();
-        LaunchButton.Enabled = true;
+        
         CultureInfo.CurrentCulture = Defculture;
+        LaunchButton.Enabled = true;
     }
 
     private void fNISToolStripMenuItem_Click(object sender, EventArgs e)
@@ -489,25 +552,31 @@ public partial class AnimlistTransitionTool : Form
 
     private void LaunchButton_Click(object sender, EventArgs e)
     {
-        if (String.IsNullOrWhiteSpace(outputPath))
+        if (Enabled)
         {
-            MessageBox.Show("Set an output path first.");
-            return;
-        }
-        if (AnimDefList.Count==0)
-        {
-            MessageBox.Show("Load an animlist first.");
-            return;
-        }
-        if (String.IsNullOrWhiteSpace(ModAuthorInput.Text) || String.IsNullOrWhiteSpace(ModNameInput.Text) || (String.IsNullOrWhiteSpace(ModPrefixInput.Text)) || (String.IsNullOrWhiteSpace(ModLinkInput.Text)))
-        {
-            MessageBox.Show("All mod fields must be filled.");
-            return;
-        }
-        modPrefix = ModPrefixInput.Text.Replace(" ", String.Empty).ToLower();
-        modName = ModNameInput.Text.Replace(" ", String.Empty);
+            LaunchButton.Enabled = false;
+            
+            if (String.IsNullOrWhiteSpace(outputPath))
+            {
+                MessageBox.Show("Set an output path first.");
+                return;
+            }
+            if (AnimDefList.Count == 0)
+            {
+                MessageBox.Show("Load an animlist first.");
+                return;
+            }
+            if (String.IsNullOrWhiteSpace(ModAuthorInput.Text) || String.IsNullOrWhiteSpace(ModNameInput.Text) || (String.IsNullOrWhiteSpace(ModPrefixInput.Text)) || (String.IsNullOrWhiteSpace(ModLinkInput.Text)))
+            {
+                MessageBox.Show("All mod fields must be filled.");
+                return;
+            }
+            modPrefix = ModPrefixInput.Text.Replace(" ", String.Empty).ToLower();
+            modName = ModNameInput.Text.Replace(" ", String.Empty);
 
-        ExportAnimlistToPatch();
+            ExportAnimlistToPatch();
+        }
+       
     }
 
     private void pathToolStripMenuItem_Click(object sender, EventArgs e)
