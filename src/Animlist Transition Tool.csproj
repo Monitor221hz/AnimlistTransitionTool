@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>nemesisConverter.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,12 +16,15 @@
     <None Remove="Resources\#0108.txt" />
     <None Remove="Resources\#0340.txt" />
     <None Remove="Resources\#2378.txt" />
+    <None Remove="Resources\#2517.txt" />
     <None Remove="Resources\av_werewolf.png" />
     <None Remove="Resources\BSIsActiveModifier.txt" />
     <None Remove="Resources\f#0029.txt" />
     <None Remove="Resources\hkbActiveVariableBindingSet.txt" />
     <None Remove="Resources\hkbBlendingTransitionEffect.txt" />
     <None Remove="Resources\hkbClipGenerator.txt" />
+    <None Remove="Resources\hkbEvaluateExpressionModifier.txt" />
+    <None Remove="Resources\hkbExpressionDataArray.txt" />
     <None Remove="Resources\hkbModifierGenerator.txt" />
     <None Remove="Resources\hkbStateMachine.txt" />
     <None Remove="Resources\hkbStateMachineEventPropertyArray.txt" />
@@ -34,7 +38,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="nemesisConverter.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\hkbEvaluateExpressionModifier.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Resources\#2378.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\#2517.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\av_werewolf.png">
@@ -68,6 +85,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\hkbClipGenerator.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\hkbExpressionDataArray.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\hkbModifierGenerator.txt">
