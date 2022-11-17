@@ -43,15 +43,15 @@ The naming is automatically assigned in the following format to avoid conflicts 
 
 The following variables are available for ported animlist behaviour, and their function is self-evident by naming:
 
-`<modPrefix>_CropAnimStart`
+`<modPrefix>_CropAnimStart` 0.0 by default
 
-`<modPrefix>_CropAnimEnd`
+`<modPrefix>_CropAnimEnd` 0.0 by default
 
-`<modPrefix>_AnimStartTime`
+`<modPrefix>_AnimStartTime`: 0.0 by default
 
-`<modPrefix>_AnimationSpeed`: Speed multiplier. At 0.0 the animation is paused.
+`<modPrefix>_AnimationSpeed`: 1.0 by default
 
-All vars are at 0.0 on graph initialization (usually on race change/playthrough start), including `_AnimationSpeed`
+
 
 ### Exit events
 Use event `OST_ExitAnim` to exit an anim instantly.
