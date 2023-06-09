@@ -1,0 +1,4 @@
+				<hkobject>
+					<hkparam name="id">{0}</hkparam>
+					<hkparam name="payload">{1}</hkparam>
+				</hkobject>

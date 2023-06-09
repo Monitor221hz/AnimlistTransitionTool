@@ -1,0 +1,5 @@
+		<hkobject name="{0}" class="hkbStateMachineTransitionInfoArray" signature="0xe397b11e">
+			<hkparam name="transitions" numelements="{1}">
+{2}
+			</hkparam>
+		</hkobject>
