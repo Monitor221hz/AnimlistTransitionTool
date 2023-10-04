@@ -11,6 +11,9 @@ using System.Globalization;
 using System.Dynamic;
 
 using System.ComponentModel;
+using CommandLine.Text;
+using CommandLine;
+
 namespace Animlist_Transition_Tool;
 
 public partial class AnimlistTransitionTool : Form
@@ -44,9 +47,26 @@ public partial class AnimlistTransitionTool : Form
     public hkbObject RootState;
     public hkbObject StateMachine;
     
-    public AnimlistTransitionTool()
+    public AnimlistTransitionTool(string[] args)
     {
         InitializeComponent();
+
+        var parserResult = Parser.Default.ParseArguments<Options>(args);
+
+        parserResult
+            .WithParsed(options =>
+            {
+                // Use the parsed options here
+                filePath = options.ListFilePath;
+                ParseAnimlistData();
+                FileViewBox.DataSource = AnimDefList;
+                FileViewBox.DisplayMember = "File";
+                outputPath = options.OutputFolder;
+                ModPrefixInput.Text = options.ModPrefix;
+                ModNameInput.Text = options.ModName;
+                ModAuthorInput.Text = options.ModAuthor;
+                ModLinkInput.Text = options.ModLink;
+            });
     }
     public string ReadResource(string name)
     {
